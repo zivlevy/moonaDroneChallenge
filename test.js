@@ -20,10 +20,19 @@
         }, wait*1000);
     };
 
+    ext.takeoff = function(callback) {
+        wait = Math.random();
+        console.log('Waiting for ' + wait + ' seconds');
+        window.setTimeout(function() {
+            callback();
+        }, wait*1000);
+    };
+
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
-            ['w', 'wait for random time', 'wait_random'],
+            ['w', ’TAKEOFF’, ‘takeoff’],
+	    [‘’,’this is’]
         ]
     };
 
