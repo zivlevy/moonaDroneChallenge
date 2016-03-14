@@ -17,8 +17,8 @@ blocks: [
         ['h', 'when distance %m.lessMore %n',          'whenDistance', '<', 20],
         ['h', 'when tilt %m.eNe %n',                   'whenTilt', '=', 1],
         ['r', 'distance',                              'getDistance'],
-        ['r', 'tilt',                                  'getTilt’],
-	['r', ‘ziv’]
+	['r', 'distance1’,                              'getDistance'],
+        ['r', 'tilt',                                  'getTilt’]
     ],
     menus: {
         motorDirection: ['this way', 'that way', 'reverse'],
