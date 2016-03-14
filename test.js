@@ -8,8 +8,9 @@
     };
     // Descriptions of the blocks and menus the extension adds
     var descriptor = {
-        blocks: [
-        ]
+        blocks: 
+[' ', 'hello world'] 
+        
     };
     // Register the extension
     ScratchExtensions.register('Hello World', descriptor, ext);
