@@ -19,7 +19,7 @@
                    }, wait*1000);
  };
  
- ext.WebSocketTest = function ()
+ ext.WebSocketTest = function (callback)
  {
     if ("WebSocket" in window)
         {
