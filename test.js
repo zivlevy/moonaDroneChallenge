@@ -1,23 +1,31 @@
 (function(ext) {
-    // Code to be run when the user closes the window, reloads the page, etc.    
+    // Cleanup function when the extension is unloaded
     ext._shutdown = function() {};
-    
-    // Shows the status of the extension 0 = red, 1 = yellow, and 2 = green
+
+    // Status reporting code
+    // Use this to report missing hardware, plugin or unsupported browser
     ext._getStatus = function() {
         return {status: 2, msg: 'Ready'};
     };
-    // Descriptions of the blocks and menus the extension adds
-    var descriptor = {
-blocks: [
-        ['w', 'turn motor on for %n secs',             'motorOnFor', 1],
-        ['r', 'tilt',                                  'getTilt’]
-    ],
-    menus: {
-        motorDirection: ['this way', 'that way', 'reverse'],
-        lessMore: ['<', '>'],
-        eNe: ['=','not =']
-    }
+
+    // Functions for block with type 'w' will get a callback function as the 
+    // final argument. This should be called to indicate that the block can
+    // stop waiting.
+    ext.wait_random = function(callback) {
+        wait = Math.random();
+        console.log('Waiting for ' + wait + ' seconds');
+        window.setTimeout(function() {
+            callback();
+        }, wait*1000);
     };
+
+    // Block and block menu descriptions
+    var descriptor = {
+        blocks: [
+            ['w', 'wait for random time', 'wait_random'],
+        ]
+    };
+
     // Register the extension
-    ScratchExtensions.register('Hello World', descriptor, ext);
+    ScratchExtensions.register('Random wait extension', descriptor, ext);
 })({});
