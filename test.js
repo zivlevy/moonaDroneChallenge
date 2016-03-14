@@ -24,8 +24,7 @@ blocks: [
         motorDirection: ['this way', 'that way', 'reverse'],
         lessMore: ['<', '>'],
         eNe: ['=','not =']
-    },
-    url: 'http://info.scratch.mit.edu/WeDo'
+    }
     };
     // Register the extension
     ScratchExtensions.register('Hello World', descriptor, ext);
