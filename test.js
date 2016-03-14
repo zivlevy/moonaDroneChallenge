@@ -39,6 +39,7 @@
              {
              var received_msg = evt.data;
              alert("Message is received..." + received_msg);
+             callback();
              };
              
              ws.onclose = function()
