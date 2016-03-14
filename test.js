@@ -9,7 +9,7 @@
     // Descriptions of the blocks and menus the extension adds
     var descriptor = {
 blocks: [
-        ['w', 'turn motor on for %n secs',             'motorOnFor', 1],
+        ['w', ‘takeoff to alt %n meters’,             'motorOnFor', 1],
         [' ', 'turn motor on',                         'allMotorsOn'],
         [' ', 'turn motor off',                        'allMotorsOff'],
         [' ', 'set motor power %n',                    'startMotorPower', 100],
