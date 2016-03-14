@@ -22,7 +22,7 @@
   // Block and block menu descriptions
   var descriptor = {
   blocks: [
-           ['w', 'wait for random time', 'wait_random'],
+           ['w', 'takeoff', 'wait_random'],
            ]
   };
   
