@@ -31,7 +31,7 @@
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
-            ['w', ’takeoff’, ‘takeoff’]
+            ['w', ’takeoff’, ‘takeoff’],
         ]
     };
 
