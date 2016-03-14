@@ -23,6 +23,7 @@
   var descriptor = {
   blocks: [
            ['w', 'takeoff', 'wait_random'],
+           ['w', 'LAND', 'wait_random'],
            ]
   };
   
