@@ -26,7 +26,7 @@
             alert("WebSocket is supported by your Browser!");
  
              // Let us open a web socket
-             var ws = new WebSocket("ws://localhost:9998");
+             var ws = new WebSocket("ws://localhost:9998/SimpleEcho");
              
              ws.onopen = function()
              {
