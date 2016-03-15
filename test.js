@@ -31,7 +31,7 @@
              ws.onopen = function()
              {
              // Web Socket is connected, send data using send()
-             ws.send("Message to send");
+             ws.send("3:100");
              alert("Message is sent...");
              };
              
