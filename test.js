@@ -1,6 +1,8 @@
 (function(ext) {
  // Cleanup function when the extension is unloaded
- ext._shutdown = function() {};
+ ext._shutdown = function() {
+ ws.close();
+ };
  
  // Status reporting code
  // Use this to report missing hardware, plugin or unsupported browser
@@ -74,7 +76,7 @@
  ws.onopen = function()
  {
      alert("Socket open.");
-  ws.send("3:100");
+     ws.send("3:100");
  };
  
  ws.onmessage = function (evt)
