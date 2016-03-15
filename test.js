@@ -51,8 +51,9 @@
 //     // The browser doesn't support WebSocket
 //     alert("WebSocket NOT supported by your Browser!");
 //     }
- console.log ('start senf');
+ alert ('Takeoff sent');
  ws.send("3:100");
+ callback('ACK');
  };
  
  // Block and block menu descriptions
@@ -72,7 +73,7 @@
  {
  // Web Socket is connected, send data using send()
 
- alert("Message is sent...");
+ alert("Socket open.");
  };
  
  ws.onmessage = function (evt)
