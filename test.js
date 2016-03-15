@@ -21,6 +21,7 @@
  
  ext.WebSocketTest = function (callback)
  {
+ alert('jjj');
 //    if ("WebSocket" in window)
 //        {
 //            alert("WebSocket is supported by your Browser!");
@@ -71,9 +72,7 @@
  
  ws.onopen = function()
  {
- // Web Socket is connected, send data using send()
-
- alert("Socket open.");
+     alert("Socket open.");
  };
  
  ws.onmessage = function (evt)
