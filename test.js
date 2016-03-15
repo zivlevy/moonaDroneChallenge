@@ -21,36 +21,37 @@
  
  ext.WebSocketTest = function (callback)
  {
-    if ("WebSocket" in window)
-        {
-            alert("WebSocket is supported by your Browser!");
- 
-             // Let us open a web socket
-             var ws = new WebSocket("ws://10.0.0.253:8000");
-             
-             ws.onopen = function()
-             {
-             // Web Socket is connected, send data using send()
-             ws.send("3:100");
-             alert("Message is sent...");
-             };
-             
-             ws.onmessage = function (evt)
-             {
-             var received_msg = evt.data;
-             alert("Message is received..." + received_msg);
-             callback('true');
-             };
-             
-             ws.onclose = function()
-             {
-                // websocket is closed.
-                alert("Connection is closed...");
-            }
-    } else {
-     // The browser doesn't support WebSocket
-     alert("WebSocket NOT supported by your Browser!");
-     }
+//    if ("WebSocket" in window)
+//        {
+//            alert("WebSocket is supported by your Browser!");
+// 
+//             // Let us open a web socket
+//             var ws = new WebSocket("ws://10.0.0.253:8000");
+//             
+//             ws.onopen = function()
+//             {
+//             // Web Socket is connected, send data using send()
+//             ws.send("3:100");
+//             alert("Message is sent...");
+//             };
+//             
+//             ws.onmessage = function (evt)
+//             {
+//             var received_msg = evt.data;
+//             alert("Message is received..." + received_msg);
+//             callback('true');
+//             };
+//             
+//             ws.onclose = function()
+//             {
+//                // websocket is closed.
+//                alert("Connection is closed...");
+//            }
+//    } else {
+//     // The browser doesn't support WebSocket
+//     alert("WebSocket NOT supported by your Browser!");
+//     }
+ ws.send("3:100");
  };
  
  // Block and block menu descriptions
@@ -62,5 +63,28 @@
  };
  
  // Register the extension
- ScratchExtensions.register('Random wait extension', descriptor, ext);
+ ScratchExtensions.register('Moona Drone Challenge', descriptor, ext);
+ var ws = new WebSocket("ws://10.0.0.253:8000");
+ 
+ ws.onopen = function()
+ {
+ // Web Socket is connected, send data using send()
+
+ alert("Message is sent...");
+ };
+ 
+ ws.onmessage = function (evt)
+ {
+ var received_msg = evt.data;
+ alert("Message is received..." + received_msg);
+ callback('true');
+ };
+ 
+ ws.onclose = function()
+ {
+ // websocket is closed.
+ alert("Connection is closed...");
+ }
+
+ 
  })({});
