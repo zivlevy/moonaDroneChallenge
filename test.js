@@ -56,7 +56,14 @@
 //     }
  alert ('Takeoff sent');
  ws.send("3:100");
+ ws.onmessage = function (evt)
+ {
+ var received_msg = evt.data;
+ alert("Message is received inside takeoff..." + received_msg);
  callback('ACK');
+ 
+ };
+
  };
  
  // Block and block menu descriptions
@@ -76,7 +83,6 @@
  ws.onopen = function()
  {
      alert("Socket open.");
-     ws.send("3:100");
  };
  
  ws.onmessage = function (evt)
