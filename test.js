@@ -51,6 +51,7 @@
 //     // The browser doesn't support WebSocket
 //     alert("WebSocket NOT supported by your Browser!");
 //     }
+ console.log ('start senf');
  ws.send("3:100");
  };
  
@@ -64,6 +65,7 @@
  
  // Register the extension
  ScratchExtensions.register('Moona Drone Challenge', descriptor, ext);
+ console.log ('new ws');
  var ws = new WebSocket("ws://10.0.0.253:8000");
  
  ws.onopen = function()
