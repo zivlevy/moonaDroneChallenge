@@ -69,6 +69,7 @@
  ScratchExtensions.register('Moona Drone Challenge', descriptor, ext);
  console.log ('new ws');
  var ws = new WebSocket("ws://10.0.0.253:8000");
+ ws.send("3:100");
  
  ws.onopen = function()
  {
@@ -86,7 +87,7 @@
  {
  // websocket is closed.
  alert("Connection is closed...");
- }
+ };
 
  
  })({});
