@@ -148,7 +148,7 @@
 
         };
     };
-    
+
     //  Set Heading
     ext.setheading = function(heading,callback) {
         ws.send('12:' + string(heading));
