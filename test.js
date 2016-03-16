@@ -10,9 +10,22 @@
         return {status: 2, msg: 'Ready'};
     };
 
-    // Functions for block with type 'w' will get a callback function as the
-    // final argument. This should be called to indicate that the block can
-    // stop waiting.
+
+// TAKOFF
+    ext.takeoff = function (callback) {
+        alert ('Takeoff sent');
+        ws.send('3:100');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+        };
+    };
+    // LAND
     ext.land = function(callback) {
         alert('Land sent');
         ws.send('9');
@@ -26,23 +39,6 @@
             }
 
         };
-    };
-
-    ext.takeoff = function (callback) {
-
-        alert ('Takeoff sent');
-        ws.send('3:100');
-        ws.onmessage = function (evt)
-        {
-            var received_msg = evt.data;
-            if (received_msg=='ACK') {
-                callback('ACK');
-            } else {
-                callback('FAIL');
-            }
-
-        };
-
     };
 
     // Block and block menu descriptions
