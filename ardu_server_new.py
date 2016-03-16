@@ -365,7 +365,7 @@ def goto_position_target_offset_ned(north, east, down):
         #print "DEBUG: mode: %s" % vehicle.mode.name
         remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
         print "Distance to target: ", remainingDistance
-        if remainingDistance<=targetDistance*0.01: #Just below target, in case of undershoot.
+        if remainingDistance<=0.7:#targetDistance*0.01: #Just below target, in case of undershoot.
             print "Reached target"
             break;
         if count > TIMEOUT:
@@ -398,7 +398,7 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
         #print "DEBUG: mode: %s" % vehicle.mode.name
         remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
         print "Distance to target: ", remainingDistance
-        if remainingDistance<=targetDistance*0.01: #Just below target, in case of undershoot.
+        if remainingDistance<=0.7: #targetDistance*0.01: #Just below target, in case of undershoot.
             print "Reached target"
             break;
         time.sleep(2)

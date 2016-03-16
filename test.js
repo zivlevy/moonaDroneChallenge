@@ -87,6 +87,51 @@
         };
     };
 
+    // Back 5
+    ext.back5 = function(callback) {
+        ws.send('11:-5:0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Right 5
+    ext.right5 = function(callback) {
+        ws.send('11:0:5:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Left 5
+    ext.left5 = function(callback) {
+        ws.send('11:0:-5:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
@@ -95,7 +140,10 @@
             ['w', 'TAKEOFF', 'takeoff'],
             ['w', 'RTL', 'rtl'],
             ['w', 'LAND', 'land'],
-            ['w', 'Forward 5', 'forward5']
+            ['w', 'Forward 5', 'forward5'],
+            ['w', 'Back 5', 'back5'],
+            ['w', 'Right 5', 'right5'],
+            ['w', 'Left 5', 'left5']
         ]
     };
 
