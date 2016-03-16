@@ -11,6 +11,20 @@
     };
 
 
+// CONNECT
+    ext.connect = function (callback) {
+        alert ('Connect send');
+        ws = new WebSocket("ws://10.0.1.253:8000");
+        callback('ACK');
+
+    };
+// DISCONNECT
+    ext.disconnect = function (callback) {
+        ws.disconnect();
+        callback('ACK');
+
+    };
+
 // TAKOFF
     ext.takeoff = function (callback) {
         alert ('Takeoff sent');
@@ -44,6 +58,8 @@
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
+            ['w', 'CONNECT', 'connect'],
+            ['w', 'DISCONNECT', 'disconnect'],
             ['w', 'TAKEOFF', 'takeoff'],
             ['w', 'LAND', 'land']
         ]
@@ -52,7 +68,7 @@
     // Register the extension
     ScratchExtensions.register('Moona Drone Challenge', descriptor, ext);
     console.log ('new ws');
-    var ws = new WebSocket("ws://10.0.1.253:8000");
+    var ws;
 
 
     ws.onopen = function()
