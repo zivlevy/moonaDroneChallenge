@@ -151,7 +151,7 @@
 
     //  Set Heading
     ext.setheading = function(callback) {
-        ws.send('12:' + string(0));
+        ws.send('12:90');
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
