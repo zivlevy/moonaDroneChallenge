@@ -34,8 +34,9 @@ TIMEOUT=10
     
 if CAMERA:	
 	camera = picamera.PiCamera()
-	
+#added by ziv to culculate movment along vehicle axis
 def getLocation_byDistanceAndBearing (lat, lon,distanceInKM, bearing):
+
     origin = geopy.Point(lat, lon)
     destination = VincentyDistance(kilometers=distanceInKM).destination(origin, bearing)
     return destination.latitude, destination.longitude
@@ -363,9 +364,16 @@ def goto_position_target_offset_ned(north, east, down):
     # send command to vehicle
     vehicle.send_mavlink(msg)
     currentLocation = vehicle.location.global_relative_frame
-    currentBearing = vehicle.bearing
-    print "bearin %s" % currentBearing
-    targetLocation = get_location_metres(currentLocation, north, east)
+    print "zzzz"
+    currentBearing = vehicle.heading
+    print currentLocation
+    newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,north/1000,currentBearing)
+    
+    newlat,newlon = getLocation_byDistanceAndBearing (newlat,newlon,east/1000,currentBearing + 90)
+    
+    targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)
+    print targetLocation
+    #targetLocation = get_location_metres(currentLocation, north, east)
     targetDistance = get_distance_metres(currentLocation, targetLocation)
     print "DEBUG: targetLocation: %s" % targetLocation
     print "DEBUG: targetLocation: %s" % targetDistance
@@ -374,7 +382,7 @@ def goto_position_target_offset_ned(north, east, down):
         #print "DEBUG: mode: %s" % vehicle.mode.name
         remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
         print "Distance to target: ", remainingDistance
-        if remainingDistance<=0.7:#targetDistance*0.01: #Just below target, in case of undershoot.
+        if remainingDistance<=targetDistance*0.05: #Just below target, in case of undershoot.
             print "Reached target"
             break;
         if count > TIMEOUT:
