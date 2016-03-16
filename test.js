@@ -135,7 +135,7 @@
     };
 
     // Left 5
-    ext.left5 = function(callback) {
+    ext.left5 = function(callback,heading) {
         ws.send('11:0:-5:0');
         ws.onmessage = function (evt)
         {
@@ -150,7 +150,7 @@
     };
 
     //  Set Heading
-    ext.setheading = function(heading,callback) {
+    ext.setheading = function(callback) {
         ws.send('12:' + string(heading));
         ws.onmessage = function (evt)
         {
