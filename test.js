@@ -150,8 +150,8 @@
     };
 
     //  Set Heading
-    ext.setheading = function(callback,heading) {
-        ws.send('12:' + string(heading));
+    ext.setheading = function(callback) {
+        ws.send('12:' + string(0));
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
@@ -175,7 +175,7 @@
             ['w', 'Back 5', 'back5'],
             ['w', 'Right 5', 'right5'],
             ['w', 'Left 5', 'left5'],
-            ['w', 'Set Heading %n', 'setheading', 0]
+            ['w', 'Set Heading', 'setheading']
         ]
     };
 
