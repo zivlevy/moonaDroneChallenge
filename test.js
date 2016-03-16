@@ -28,7 +28,7 @@
 // TAKOFF
     ext.takeoff = function (callback) {
         alert ('Takeoff sent');
-        ws.send('3:100');
+        ws.send('3:10');
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
