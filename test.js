@@ -151,6 +151,7 @@
 
     //  Set Heading
     ext.setheading = function(heading,callback) {
+        console.log(heading);
         ws.send('12:' + heading.toString());
         ws.onmessage = function (evt)
         {
