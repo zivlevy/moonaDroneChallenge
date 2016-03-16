@@ -15,6 +15,23 @@
     ext.connect = function (callback) {
         alert ('Connect send');
         ws = new WebSocket("ws://10.0.1.253:8000");
+        ws.onopen = function()
+        {
+            alert("Socket open.");
+        };
+
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            alert("Message is received..." + received_msg);
+
+        };
+
+        ws.onclose = function()
+        {
+            // websocket is closed.
+            alert("Connection is closed...");
+        };
         callback('ACK');
 
     };
@@ -153,24 +170,7 @@
     var ws;
 
 
-    ws.onopen = function()
-    {
 
-        alert("Socket open.");
-    };
-
-    ws.onmessage = function (evt)
-    {
-        var received_msg = evt.data;
-        alert("Message is received..." + received_msg);
-
-    };
-
-    ws.onclose = function()
-    {
-        // websocket is closed.
-        alert("Connection is closed...");
-    };
 
 
 })({});

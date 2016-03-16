@@ -12,6 +12,9 @@ import commands
 import math
 
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
+
+import geopy
+from geopy.distance import VincentyDistance
 """
 Connecting to Quadcopter
 """
@@ -25,14 +28,17 @@ vehicle = connect('127.0.0.1:1244', wait_ready=True)
 print "ziv"
 CAMERA = False
 server_up = True
-TIMEOUT=30
+TIMEOUT=10
 
     
     
 if CAMERA:	
 	camera = picamera.PiCamera()
 	
-
+def getLocation_byDistanceAndBearing (lat, lon,distanceInKM, bearing):
+    origin = geopy.Point(lat, lon)
+    destination = VincentyDistance(kilometers=distanceInKM).destination(origin, bearing)
+    return destination.latitude, destination.longitude
 
 def send_data(data):
     print "Sending: " + data
@@ -357,9 +363,12 @@ def goto_position_target_offset_ned(north, east, down):
     # send command to vehicle
     vehicle.send_mavlink(msg)
     currentLocation = vehicle.location.global_relative_frame
+    currentBearing = vehicle.bearing
+    print "bearin %s" % currentBearing
     targetLocation = get_location_metres(currentLocation, north, east)
     targetDistance = get_distance_metres(currentLocation, targetLocation)
-    
+    print "DEBUG: targetLocation: %s" % targetLocation
+    print "DEBUG: targetLocation: %s" % targetDistance
     count = 0
     while vehicle.mode.name=="GUIDED": #Stop action if we are no longer in guided mode.
         #print "DEBUG: mode: %s" % vehicle.mode.name
@@ -370,8 +379,8 @@ def goto_position_target_offset_ned(north, east, down):
             break;
         if count > TIMEOUT:
             break
-        count+=2
-        time.sleep(2)    
+        count+=1
+        time.sleep(1)    
 
 
 def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
@@ -391,8 +400,8 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
     targetDistance = get_distance_metres(currentLocation, targetLocation)
     gotoFunction(targetLocation)
     
-    #print "DEBUG: targetLocation: %s" % targetLocation
-    #print "DEBUG: targetLocation: %s" % targetDistance
+    print "DEBUG: targetLocation: %s" % targetLocation
+    print "DEBUG: targetLocation: %s" % targetDistance
 
     while vehicle.mode.name=="GUIDED": #Stop action if we are no longer in guided mode.
         #print "DEBUG: mode: %s" % vehicle.mode.name
