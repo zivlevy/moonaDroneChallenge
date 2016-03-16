@@ -39,10 +39,42 @@
             }
         };
     };
+
+    // RTL
+    ext.rtl = function(callback) {
+        alert('RTL sent');
+        ws.send('8');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
     // LAND
     ext.land = function(callback) {
         alert('Land sent');
         ws.send('9');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Forward 5
+    ext.forward5 = function(callback) {
+        ws.send('11:5:0:0');
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
@@ -61,7 +93,9 @@
             ['w', 'CONNECT', 'connect'],
             ['w', 'DISCONNECT', 'disconnect'],
             ['w', 'TAKEOFF', 'takeoff'],
-            ['w', 'LAND', 'land']
+            ['w', 'RTL', 'rtl'],
+            ['w', 'LAND', 'land'],
+            ['w', 'Forward 5', 'forward5']
         ]
     };
 
