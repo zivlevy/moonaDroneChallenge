@@ -167,7 +167,7 @@
 
     // Move N Meters
     ext.moveNmeters = function(meters,callback) {
-        ws.send('11:meters:0:0');
+        ws.send('11:' + meters.toString() +':0:0');
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
