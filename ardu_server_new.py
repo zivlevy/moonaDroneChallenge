@@ -11,8 +11,10 @@ import sys
 import commands
 import math
 
+#added by ziv - a websocket class
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
+#added by ziv - a geo helper class
 import geopy
 from geopy.distance import VincentyDistance
 """
@@ -25,7 +27,6 @@ Connecting to Quadcopter
 
 vehicle = connect('127.0.0.1:1244', wait_ready=True)
 
-print "ziv"
 CAMERA = False
 server_up = True
 TIMEOUT=10
@@ -41,9 +42,9 @@ def getLocation_byDistanceAndBearing (lat, lon,distanceInKM, bearing):
     destination = VincentyDistance(kilometers=distanceInKM).destination(origin, bearing)
     return destination.latitude, destination.longitude
 
-def send_data(data):
-    print "Sending: " + data
-    client.sendall(data)
+#def send_data(data):
+#    print "Sending: " + data
+#    client.sendall(data)
 
 
 def arm():
@@ -143,6 +144,7 @@ def condition_yaw(heading, relative=False):
         0, 0, 0)    # param 5 ~ 7 not used
     # send command to vehicle
     vehicle.send_mavlink(msg)
+    vehicle.flush()
 
 
 
@@ -363,16 +365,14 @@ def goto_position_target_offset_ned(north, east, down):
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink) 
     # send command to vehicle
     vehicle.send_mavlink(msg)
+    
+    #added by ziv - find new target location based on current heading
     currentLocation = vehicle.location.global_relative_frame
-    print "zzzz"
     currentBearing = vehicle.heading
-    print currentLocation
     newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,north/1000,currentBearing)
-    
-    newlat,newlon = getLocation_byDistanceAndBearing (newlat,newlon,east/1000,currentBearing + 90)
-    
+    newlat,newlon = getLocation_byDistanceAndBearing (newlat,newlon,east/1000,currentBearing + 90)    
     targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)
-    print targetLocation
+
     #targetLocation = get_location_metres(currentLocation, north, east)
     targetDistance = get_distance_metres(currentLocation, targetLocation)
     print "DEBUG: targetLocation: %s" % targetLocation
@@ -399,7 +399,7 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
     the target position. This allows it to be called with different position-setting commands. 
     By default it uses the standard method: dronekit.lib.Vehicle.simple_goto().
 
-    The method reports the distance to target every two seconds.
+    The method reports the distance to target every second.
     """
     
     
@@ -418,7 +418,7 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
         if remainingDistance<=0.7: #targetDistance*0.01: #Just below target, in case of undershoot.
             print "Reached target"
             break;
-        time.sleep(2)
+        time.sleep(1)
 
 
 
@@ -518,7 +518,7 @@ c.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 c.bind(('', 1234))
 c.listen(1)
 """
-class SimpleEcho(WebSocket):
+class droneCommands(WebSocket):
 
     def handleMessage(self):
         # echo message back to client
@@ -596,10 +596,13 @@ class SimpleEcho(WebSocket):
     def handleClose(self):
         print self.address, 'closed'
 
-server = SimpleWebSocketServer('', 8000, SimpleEcho)
+
+#added by ziv - establish a web socket server
+server = SimpleWebSocketServer('', 8000, droneCommands)
+print "Server is up - waiting for client connection"
 server.serveforever()
 quad_commands = {0: "ARM", 1: "DISARM", 2:"SETHOME",3: "TAKEOFF", 4:"FLYTO",5:"CHECKIFQRAVAILABLE",6:"DETECTQRANDFLY",7:"SETALTITUDE8",8:"RETURNTOLAUNCH",9:"LAND",10:"SETFLIGHTMODE",11:"GOTO",12:"SETHEADINGABS",13:"SETHEADINGREL"}
-print "Server is up - waiting for client connection"
+
 
 """
 Accepting 1 client only, there couldn't be more than 1 ground station

@@ -164,6 +164,21 @@
 
         };
     };
+
+    // Move N Meters
+    ext.moveNmeters = function(meters,callback) {
+        ws.send('11:meters:0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
@@ -176,7 +191,8 @@
             ['w', 'Back 5', 'back5'],
             ['w', 'Right 5', 'right5'],
             ['w', 'Left 5', 'left5'],
-            ['w', 'Set Heading %n', 'setheading',360]
+            ['w', 'Set Heading %n', 'setheading',360],
+            ['w', 'Move %n meters', 'moveNmeters',1]
         ]
     };
 
