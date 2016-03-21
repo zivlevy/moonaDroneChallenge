@@ -180,6 +180,21 @@
         };
     };
 
+    // Move N Meters New
+    ext.moveNmetersNew = function(meters,callback) {
+        ws.send('22:' + meters.toString() +':0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
     // TakePicture
     ext.takePicture = function(callback) {
         ws.send('5');
@@ -208,7 +223,8 @@
             ['w', 'Left 5', 'left5'],
             ['w', 'Set Heading %n', 'setheading',360],
             ['w', 'Move %n meters', 'moveNmeters',1],
-            ['w', 'Take picture', 'takePicture']
+            ['w', 'Take picture', 'takePicture'],
+            ['w', 'Move %n meters new', 'moveNmetersNew',1]
         ]
     };
 

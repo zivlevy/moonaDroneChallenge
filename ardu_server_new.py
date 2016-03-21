@@ -50,9 +50,9 @@ def getLocation_byDistanceAndBearing (lat, lon,distanceInKM, bearing):
 def arm():
     print "Basic pre-arm checks"
     # Don't let the user try to arm until autopilot is ready
-    while not vehicle.is_armable:
-        print " Waiting for vehicle to initialise..."
-        time.sleep(1)
+    #while not vehicle.is_armable:
+    #    print " Waiting for vehicle to initialise..."
+    #    time.sleep(1)
 
         
     print "Arming motors"
