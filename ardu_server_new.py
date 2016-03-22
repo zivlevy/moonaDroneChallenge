@@ -137,13 +137,12 @@ def condition_yaw(heading, relative=False):
         mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
         0, #confirmation
         heading,    # param 1, yaw in degrees
-        0,          # param 2, yaw speed deg/s
+        10,          # param 2, yaw speed deg/s
         1,          # param 3, direction -1 ccw, 1 cw
         is_relative, # param 4, relative offset 1, absolute angle 0
         0, 0, 0)    # param 5 ~ 7 not used
     # send command to vehicle
     vehicle.send_mavlink(msg)
-    vehicle.flush()
 
 
 
@@ -415,7 +414,7 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
         #print "DEBUG: mode: %s" % vehicle.mode.name
         remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
         print "Distance to target: ", remainingDistance
-        if remainingDistance<=0.7: #targetDistance*0.01: #Just below target, in case of undershoot.
+        if remainingDistance<=targetDistance*0.01: #Just below target, in case of undershoot.
             print "Reached target"
             break;
         time.sleep(1)
@@ -593,9 +592,12 @@ class droneCommands(WebSocket):
             forward = float(data[1]) 
             currentLocation = vehicle.location.global_relative_frame
             currentBearing = vehicle.heading
-            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)   
-            targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)   
-            goto_position_target_global_int(targetLocation)
+            print currentBearing
+            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
+            print currentLocation.lat,currentLocation.lon
+            print newlat,newlon
+            goto(forward,0);
+            #goto_position_target_global_int(targetLocation)
 
 	self.sendMessage('ACK')
 	vehicle.flush() 
