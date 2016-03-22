@@ -180,8 +180,8 @@
         };
     };
 
-    // Move N Meters New
-    ext.moveNmetersNew = function(meters,callback) {
+    // Move N Meters North
+    ext.moveNmetersNorth = function(meters,callback) {
         ws.send('22:' + meters.toString() +':0:0');
         ws.onmessage = function (evt)
         {
@@ -195,6 +195,50 @@
         };
     };
 
+    // Move N Meters South
+    ext.moveNmetersSouth = function(meters,callback) {
+        ws.send('23:' + meters.toString() +':0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Move N Meters East
+    ext.moveNmetersEast = function(meters,callback) {
+        ws.send('24:' + meters.toString() +':0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Move N Meters Weat
+    ext.moveNmetersWest = function(meters,callback) {
+        ws.send('25:' + meters.toString() +':0:0');
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
     // TakePicture
     ext.takePicture = function(callback) {
         ws.send('5');
@@ -224,7 +268,10 @@
             ['w', 'Set Heading %n', 'setheading',360],
             ['w', 'Move %n meters', 'moveNmeters',1],
             ['w', 'Take picture', 'takePicture'],
-            ['w', 'Move %n meters new', 'moveNmetersNew',1]
+            ['w', 'Move %n meters north ', 'moveNmetersNorth',1],
+            ['w', 'Move %n meters east', 'moveNmetersEast',1],
+            ['w', 'Move %n meters south', 'moveNmetersSouth',1],
+            ['w', 'Move %n meters west', 'moveNmetersWest',1],
         ]
     };
 
