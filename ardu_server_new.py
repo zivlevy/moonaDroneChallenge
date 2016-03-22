@@ -16,7 +16,7 @@ from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 #added by ziv - a geo helper class
 import geopy
-from geopy.distance import VincentyDistance
+from geopy.distance import VincentyDistance,vincenty
 """
 Connecting to Quadcopter
 """
@@ -143,7 +143,18 @@ def condition_yaw(heading, relative=False):
         0, 0, 0)    # param 5 ~ 7 not used
     # send command to vehicle
     vehicle.send_mavlink(msg)
-
+    count = 0
+    while True: 
+        #print "DEBUG: mode: %s" % vehicle.mode.name
+        
+        print "Current heading: ", vehicle.heading
+        if vehicle.heading==heading: 
+            print "Reached heading"
+            break;
+        if count > TIMEOUT:
+            break
+        count+=1
+        time.sleep(1)    
 
 
 
@@ -434,22 +445,27 @@ def gotoDistanceInHeading(distanceMeters, heading):
 
     The method reports the distance to target every second.
     """
-    dNorth = distanceMeters * math.sin((90-heading)*math.pi / 180)
-    dEast = distanceMeters * math.cos((90-heading)*math.pi / 180)
     currentLocation = vehicle.location.global_relative_frame
-    targetLocation = get_location_metres(currentLocation, dNorth, dEast)
-    targetDistance = get_distance_metres(currentLocation, targetLocation)
+    currentBearing = vehicle.heading
+    newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,distanceMeters/1000,currentBearing)   
+    targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)
+    cL=geopy.Point(currentLocation.lat, currentLocation.lon)
+    cT = geopy.Point(targetLocation.lat, targetLocation.lon)
+    targetDistance = vincenty(cL, cT).meters       
     vehicle.simple_goto(targetLocation)
     
-    print "DEBUG: targetLocation: %s" % targetLocation
-    print "DEBUG: targetLocation: %s" % targetDistance
+    #print "DEBUG: targetLocation: %s" % targetLocation
+    #print "DEBUG: targetLocation: %s" % targetDistance
     count = 0
     while vehicle.mode.name=="GUIDED": #Stop action if we are no longer in guided mode.
         #print "DEBUG: mode: %s" % vehicle.mode.name
-        remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
+        currentLocation = vehicle.location.global_relative_frame
+        cL=geopy.Point(currentLocation.lat, currentLocation.lon)
+        remainingDistance = vincenty(cL, cT).meters
         print "Distance to target: ", remainingDistance
-        if remainingDistance<=targetDistance*0.1: #Just below target, in case of undershoot.
+        if remainingDistance<=0.20: #targetDistance*0.1: #Just below target, in case of undershoot.
             print "Reached target"
+            time.sleep(1)
             break;
         if count > TIMEOUT:
             break
@@ -626,44 +642,6 @@ class droneCommands(WebSocket):
             vector = float(data[1])
             gotoDistanceInHeading (vector , vehicle.heading) 
             
-        elif cmd_id == 20:
-            forward = float(data[1]) 
-#            currentLocation = vehicle.location.global_relative_frame
-#            currentBearing = vehicle.heading
-#            print currentBearing
-#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
-#            print currentLocation.lat,currentLocation.lon
-#            print newlat,newlon
-            goto(forward,0);
-
-        elif cmd_id == 23:
-            forward = float(data[1]) 
-#            currentLocation = vehicle.location.global_relative_frame
-#            currentBearing = vehicle.heading
-#            print currentBearing
-#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
-#            print currentLocation.lat,currentLocation.lon
-#            print newlat,newlon
-            goto(-forward,0);
-
-        elif cmd_id == 24:
-            forward = float(data[1]) 
-#            currentLocation = vehicle.location.global_relative_frame
-#            currentBearing = vehicle.heading
-#            print currentBearing
-#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
-#            print currentLocation.lat,currentLocation.lon
-#            print newlat,newlon
-            goto(0,forward);
-        elif cmd_id == 25:
-            forward = float(data[1]) 
-#            currentLocation = vehicle.location.global_relative_frame
-#            currentBearing = vehicle.heading
-#            print currentBearing
-#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
-#            print currentLocation.lat,currentLocation.lon
-#            print newlat,newlon
-            goto(0,-forward);    
 
 
 	self.sendMessage('ACK')
