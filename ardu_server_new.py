@@ -418,7 +418,7 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
             print "Reached target"
             break;
         if count > TIMEOUT:
-        break
+            break
         count+=1
 
         time.sleep(1)
