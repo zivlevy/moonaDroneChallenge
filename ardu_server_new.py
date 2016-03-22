@@ -24,7 +24,6 @@ Connecting to Quadcopter
 #vehicle = api.get_vehicles()[0] 
 #cmds = vehicle.commands
 
-
 vehicle = connect('127.0.0.1:1244', wait_ready=True)
 
 CAMERA = False
@@ -363,6 +362,7 @@ def goto_position_target_offset_ned(north, east, down):
         0, 0, 0, # x, y, z velocity in m/s  (not used)
         0, 0, 0, # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink) 
+    vehicle.groundspeed = 5
     # send command to vehicle
     vehicle.send_mavlink(msg)
     
@@ -587,7 +587,16 @@ class droneCommands(WebSocket):
     
         elif cmd_id == 13:
             condition_yaw(float(data[1]),True)
-		
+
+            
+        elif cmd_id == 22:
+            forward = float(data[1]) 
+            currentLocation = vehicle.location.global_relative_frame
+            currentBearing = vehicle.heading
+            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)   
+            targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)   
+            goto_position_target_global_int(targetLocation)
+
 	self.sendMessage('ACK')
 	vehicle.flush() 
     def handleConnected(self):
