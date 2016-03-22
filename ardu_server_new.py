@@ -594,14 +594,43 @@ class droneCommands(WebSocket):
             
         elif cmd_id == 22:
             forward = float(data[1]) 
-            currentLocation = vehicle.location.global_relative_frame
-            currentBearing = vehicle.heading
-            print currentBearing
-            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
-            print currentLocation.lat,currentLocation.lon
-            print newlat,newlon
+#            currentLocation = vehicle.location.global_relative_frame
+#            currentBearing = vehicle.heading
+#            print currentBearing
+#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
+#            print currentLocation.lat,currentLocation.lon
+#            print newlat,newlon
             goto(forward,0);
-            #goto_position_target_global_int(targetLocation)
+
+        elif cmd_id == 23:
+            forward = float(data[1]) 
+#            currentLocation = vehicle.location.global_relative_frame
+#            currentBearing = vehicle.heading
+#            print currentBearing
+#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
+#            print currentLocation.lat,currentLocation.lon
+#            print newlat,newlon
+            goto(-forward,0);
+
+        elif cmd_id == 24:
+            forward = float(data[1]) 
+#            currentLocation = vehicle.location.global_relative_frame
+#            currentBearing = vehicle.heading
+#            print currentBearing
+#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
+#            print currentLocation.lat,currentLocation.lon
+#            print newlat,newlon
+            goto(0,forward);
+        elif cmd_id == 25:
+            forward = float(data[1]) 
+#            currentLocation = vehicle.location.global_relative_frame
+#            currentBearing = vehicle.heading
+#            print currentBearing
+#            newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,forward/1000,currentBearing)
+#            print currentLocation.lat,currentLocation.lon
+#            print newlat,newlon
+            goto(0,-forward);    
+
 
 	self.sendMessage('ACK')
 	vehicle.flush() 
