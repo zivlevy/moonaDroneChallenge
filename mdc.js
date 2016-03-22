@@ -14,7 +14,8 @@
 // CONNECT
     ext.connect = function (ip, callback) {
         alert ('Connect send');
-        ws = new WebSocket("ws://%s:8000" % ip);
+        address = "ws://%s:8000" % ip;
+        ws = new WebSocket(address);
         ws.onopen = function()
         {
             alert("Socket open.");
