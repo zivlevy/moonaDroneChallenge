@@ -424,6 +424,37 @@ def goto(dNorth, dEast, gotoFunction=vehicle.simple_goto):
         time.sleep(1)
 
 
+def gotoDistanceInHeading(distanceMeters, heading):
+    """
+    Moves the vehicle to a position dNorth metres North and dEast metres East of the current position.
+
+    The method takes a function pointer argument with a single `dronekit.lib.LocationGlobal` parameter for 
+    the target position. This allows it to be called with different position-setting commands. 
+    By default it uses the standard method: dronekit.lib.Vehicle.simple_goto().
+
+    The method reports the distance to target every second.
+    """
+    dNorth = distanceMeters * math.sin((90-heading)*math.pi / 180)
+    dEast = distanceMeters * math.cos((90-heading)*math.pi / 180)
+    currentLocation = vehicle.location.global_relative_frame
+    targetLocation = get_location_metres(currentLocation, dNorth, dEast)
+    targetDistance = get_distance_metres(currentLocation, targetLocation)
+    vehicle.simple_goto(targetLocation)
+    
+    print "DEBUG: targetLocation: %s" % targetLocation
+    print "DEBUG: targetLocation: %s" % targetDistance
+    count = 0
+    while vehicle.mode.name=="GUIDED": #Stop action if we are no longer in guided mode.
+        #print "DEBUG: mode: %s" % vehicle.mode.name
+        remainingDistance=get_distance_metres(vehicle.location.global_relative_frame, targetLocation)
+        print "Distance to target: ", remainingDistance
+        if remainingDistance<=targetDistance*0.1: #Just below target, in case of undershoot.
+            print "Reached target"
+            break;
+        if count > TIMEOUT:
+            break
+        count+=1
+        time.sleep(1)
 
 """
 Functions that move the vehicle by specifying the velocity components in each direction.
@@ -591,8 +622,11 @@ class droneCommands(WebSocket):
         elif cmd_id == 13:
             condition_yaw(float(data[1]),True)
 
-            
         elif cmd_id == 22:
+            vector = float(data[1])
+            gotoDistanceInHeading (vector , vehicle.heading) 
+            
+        elif cmd_id == 20:
             forward = float(data[1]) 
 #            currentLocation = vehicle.location.global_relative_frame
 #            currentBearing = vehicle.heading
