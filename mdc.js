@@ -17,7 +17,7 @@
         a = "ws://";
         b=":8000";
         wsAddress = a+ip+b;
-        ws = new WebSocket(address);
+        ws = new WebSocket(wsAddress);
         ws.onopen = function()
         {
             alert("Socket open.");
