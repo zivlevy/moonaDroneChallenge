@@ -17,6 +17,8 @@ from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 #added by ziv - a geo helper class
 import geopy
 from geopy.distance import VincentyDistance,vincenty
+
+import cv2
 """
 Connecting to Quadcopter
 """
@@ -569,7 +571,7 @@ c.bind(('', 1234))
 c.listen(1)
 """
 class droneCommands(WebSocket):
-
+    isAck = False
     def handleMessage(self):
         # echo message back to client
         isAck = False
@@ -599,7 +601,10 @@ class droneCommands(WebSocket):
             goto_position_target_global_int(targetLocation)
 
         elif cmd_id ==5:
-            camera.capture('/tmp/image.jpg')
+            cam = cv2.VideoCapture(0)
+            s, im = cam.read() # captures image
+            cv2.imwrite("/tmp/image.jpg",im) 
+            print data[1]
             output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
             print output
             if output[0] == 0:
@@ -647,10 +652,10 @@ class droneCommands(WebSocket):
             gotoDistanceInHeading (vector , vehicle.heading) 
             
 
-    if (isAck == False):
-	   self.sendMessage('ACK')
+        if (isAck == False):
+	       self.sendMessage('ACK')
 
-	vehicle.flush() 
+        vehicle.flush() 
     def handleConnected(self):
         print self.address, 'connected'
 

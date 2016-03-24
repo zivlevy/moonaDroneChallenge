@@ -125,15 +125,17 @@
     };
 
     // TakePicture
-    ext.takePicture = function(callback) {
+    ext.takePicture = function(id,callback) {
         ws.send('5');
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
-            if (received_msg=='ACK') {
-                callback('ACK');
+            if (received_msg=='FOUND') {
+                callback('FOUND');
+            } else if (received_msg=='WRONGQR'){
+                callback('WRONGQR');
             } else {
-                callback('FAIL');
+                callback('NOQR');
             }
 
         };
@@ -147,7 +149,7 @@
             ['w', 'RTL', 'rtl'],
             ['w', 'LAND', 'land'],
             ['w', 'Set Heading %n', 'setheading',0],
-            ['w', 'Take picture', 'takePicture'],
+            ['w', 'Find QR ID %n', 'takePicture',1000],
             ['w', 'Move %n meters', 'moveNmeters',1]
         ]
     };
