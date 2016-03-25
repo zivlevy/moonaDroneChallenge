@@ -143,13 +143,13 @@
     // Block and block menu descriptions
     var descriptor = {
         blocks: [
-            ['w', 'CONNECT %s', 'connect' , '10.0.0.101'],
+            ['w', 'CONNECT %s', 'connect' , '10.0.0.253'],
             ['w', 'DISCONNECT', 'disconnect'],
             ['w', 'TAKEOFF', 'takeoff'],
             ['w', 'RTL', 'rtl'],
             ['w', 'LAND', 'land'],
             ['w', 'Set Heading %n', 'setheading',0],
-            ['w', 'Find QR ID %n', 'takePicture',1000],
+            ['R', 'Find QR ID %n', 'takePicture',1000],
             ['w', 'Move %n meters', 'moveNmeters',1]
         ]
     };
