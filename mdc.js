@@ -134,9 +134,7 @@
             var reader = new window.FileReader();
             reader.readAsBinaryString(received_msg);
             reader.onloadend = function() {
-                base64data = reader.result;
-                console.log(base64data );
-                result = atob(base64data);
+                result = reader.result;
                 console.log(result );
             }
 
