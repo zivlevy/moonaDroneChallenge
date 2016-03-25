@@ -130,8 +130,14 @@
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
+            var reader = new window.FileReader();
+            reader.readAsDataURL(received_msg);
+            reader.onloadend = function() {
+                base64data = reader.result;
+                console.log(base64data );
+            }
 
-            console.log(evt.data[0])
+            
             if (received_msg=='FOUND') {
                 callback('FOUND');
             } else if (received_msg=='WRONGQR'){
