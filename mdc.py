@@ -1,4 +1,4 @@
-import picamera
+#import picamera
 import time
 import os.path
 
@@ -28,14 +28,17 @@ Connecting to Quadcopter
 
 vehicle = connect('127.0.0.1:1244', wait_ready=True)
 
-CAMERA = False
+CAMERA = True
 server_up = True
 TIMEOUT=10
 
     
     
-if CAMERA:	
-	camera = picamera.PiCamera()
+#if CAMERA:	
+    #cam = cv2.VideoCapture(0)
+    #cam.set(3,1024)
+    #cam.set(4,768)
+    #time.sleep(1)
 #added by ziv to culculate movment along vehicle axis
 def getLocation_byDistanceAndBearing (lat, lon,distanceInKM, bearing):
 
@@ -608,10 +611,11 @@ class droneCommands(WebSocket):
             output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
             print output
             if output[0] == 0:
-                readId = output
+                readId = output[1]
+                print readId
                 if readId == "WRONGQR":
                     self.sendMessage('WRONGQR')
-                elif readId == data[0]:
+                elif readId == data[1]:
                     self.sendMessage('FOUND')
                 else:
                     self.sendMessage('NOQR')
