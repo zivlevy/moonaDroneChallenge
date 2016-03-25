@@ -611,16 +611,17 @@ class droneCommands(WebSocket):
             output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
             print output
             if output[0] == 0:
+                self.frag_type = 0x1
                 readId = output[1]
                 print readId
-                if readId == 1:
+                if readId == "WRONGQR\n":
                     self.sendMessage(readId)
                 elif readId == data[1]:
-                    self.sendMessage(2)
+                    self.sendMessage('FOUND\n')
                 else:
-                    self.sendMessage(3)
+                    self.sendMessage('NOQR\n')
             else:
-                self.sendMessage(3)
+                self.sendMessage('NOQR\n')
             isAck = True
 
         elif cmd_id ==6:
