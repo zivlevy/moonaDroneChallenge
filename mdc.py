@@ -613,14 +613,14 @@ class droneCommands(WebSocket):
             if output[0] == 0:
                 readId = output[1]
                 print readId
-                if readId == "WRONGQR":
+                if readId == 1:
                     self.sendMessage(readId)
                 elif readId == data[1]:
-                    self.sendMessage('FOUND')
+                    self.sendMessage(2)
                 else:
-                    self.sendMessage('NOQR')
+                    self.sendMessage(3)
             else:
-                self.sendMessage('NOQR')
+                self.sendMessage(3)
             isAck = True
 
         elif cmd_id ==6:

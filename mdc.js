@@ -131,7 +131,7 @@
         {
             var received_msg = evt.data;
 
-            console.log(evt.data.toString())
+            console.log(evt.data)
             if (received_msg=='FOUND') {
                 callback('FOUND');
             } else if (received_msg=='WRONGQR'){
