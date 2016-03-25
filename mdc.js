@@ -129,18 +129,21 @@
         ws.send('5:' + id.toString() );
         ws.onmessage = function (evt)
         {
+            result = ""
             var received_msg = evt.data;
             var reader = new window.FileReader();
             reader.readAsDataURL(received_msg);
             reader.onloadend = function() {
                 base64data = reader.result;
                 console.log(base64data );
+                result = atob(base64data);
+                console.log(result );
             }
 
-            
-            if (received_msg=='FOUND') {
+
+            if (result=='FOUND') {
                 callback('FOUND');
-            } else if (received_msg=='WRONGQR'){
+            } else if (result=='WRONGQR'){
                 callback('WRONGQR');
             } else {
                 callback('NOQR');
