@@ -612,16 +612,15 @@ class droneCommands(WebSocket):
             print output
             if output[0] == 0:
                 self.frag_type = 0x1
-                readId = output[1]
-                print readId
-                if readId == "WRONGQR\n":
-                    self.sendMessage(readId)
-                elif readId == data[1]:
-                    self.sendMessage('FOUND\n')
+                print output[1]
+                if output[1] == "WRONGQR":
+                    self.sendMessage('WRONGQR')
+                elif output[1] == data[1]:
+                    self.sendMessage('FOUND')
                 else:
-                    self.sendMessage('NOQR\n')
+                    self.sendMessage('NOQR')
             else:
-                self.sendMessage('NOQR\n')
+                self.sendMessage('NOQR')
             isAck = True
 
         elif cmd_id ==6:
