@@ -130,7 +130,8 @@
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
-            console.log(received_msg.toString())
+
+            console.log(evt.data)
             if (received_msg=='FOUND') {
                 callback('FOUND');
             } else if (received_msg=='WRONGQR'){
