@@ -605,6 +605,14 @@ class droneCommands(WebSocket):
 
         elif cmd_id ==5:
             cam = cv2.VideoCapture(0)
+            cam.set(3,1024)
+            cam.set(4,768)
+            cam.set(10,50)
+            cam.set(11,50)
+            cam.set(12,50)
+            ramp_frames=30;
+            for i in xrange(ramp_frames):
+                s, im = cam.read()
             s, im = cam.read() # captures image
             cv2.imwrite("/tmp/image.jpg",im) 
             print data[1]
