@@ -1,6 +1,7 @@
-#import picamera
+import picamera
 import time
 import os.path
+import shutil
 
 from droneapi.lib import VehicleMode, Location, Command
 from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
@@ -34,7 +35,10 @@ TIMEOUT=10
 
     
     
-#if CAMERA:	
+if CAMERA:	
+    camera = picamera.PiCamera()
+    camera.ISO = 100
+    camera.exposure = "snow"
     #cam = cv2.VideoCapture(0)
     #cam.set(3,1024)
     #cam.set(4,768)
@@ -604,18 +608,20 @@ class droneCommands(WebSocket):
             goto_position_target_global_int(targetLocation)
 
         elif cmd_id ==5:
-            cam = cv2.VideoCapture(0)
-            cam.set(3,1024)
-            cam.set(4,768)
-            cam.set(10,50)
-            cam.set(11,50)
-            cam.set(12,50)
-            ramp_frames=30;
-            for i in xrange(ramp_frames):
-                s, im = cam.read()
-            s, im = cam.read() # captures image
-            cv2.imwrite("/tmp/image.jpg",im) 
-            print data[1]
+            camera.capture('/tmp/image1.jpg')
+            shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')
+            #cam = cv2.VideoCapture(0)
+            #cam.set(3,1024)
+            #cam.set(4,768)
+            #cam.set(10,50)
+            #cam.set(11,50)
+            #cam.set(12,50)
+            #ramp_frames=30;
+            #for i in xrange(ramp_frames):
+            #    s, im = cam.read()
+            #s, im = cam.read() # captures image
+            #cv2.imwrite("/tmp/image.jpg",im) 
+            #print data[1]
             output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
             print output
             if output[0] == 0:
