@@ -222,7 +222,7 @@
             ['w', 'Left %n meters', 'moveLmeters',1],
             ['w', 'Set ISO %n', 'setISO',100],
             ['R', 'Find QR ID %n', 'findQR',1000],
-            ['R', 'Take Picture', 'takePicture']
+            ['W', 'Take Picture', 'takePicture']
         ]
     };
 
