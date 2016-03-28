@@ -124,6 +124,36 @@
         };
     };
 
+    // Move R Meters
+    ext.moveRmeters = function(meters,callback) {
+        ws.send('23:' + meters.toString());
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Move L Meters
+    ext.moveLmeters = function(meters,callback) {
+        ws.send('24:' + meters.toString());
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
     // TakePicture
     ext.takePicture = function(id,callback) {
         ws.send('5:' + id.toString() );
@@ -161,7 +191,9 @@
             ['w', 'LAND', 'land'],
             ['w', 'Set Heading %n', 'setheading',0],
             ['R', 'Find QR ID %n', 'takePicture',1000],
-            ['w', 'Move %n meters', 'moveNmeters',1]
+            ['w', 'Forward %n meters', 'moveNmeters',1],
+            ['w', 'Right %n meters', 'moveRmeters',1],
+            ['w', 'Left %n meters', 'moveLmeters',1]
         ]
     };
 

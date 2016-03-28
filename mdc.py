@@ -1,4 +1,3 @@
-import picamera
 import time
 import os.path
 import shutil
@@ -29,13 +28,14 @@ Connecting to Quadcopter
 
 vehicle = connect('127.0.0.1:1244', wait_ready=True)
 
-CAMERA = True
+CAMERA = False
 server_up = True
 TIMEOUT=10
 
     
     
-if CAMERA:	
+if CAMERA:
+    import picamera	
     camera = picamera.PiCamera()
     camera.ISO = 100
     camera.exposure = "snow"
@@ -455,8 +455,7 @@ def gotoDistanceInHeading(distanceMeters, heading):
     The method reports the distance to target every second.
     """
     currentLocation = vehicle.location.global_relative_frame
-    currentBearing = vehicle.heading
-    newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,distanceMeters/1000,currentBearing)   
+    newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,distanceMeters/1000,heading)   
     targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)
     cL=geopy.Point(currentLocation.lat, currentLocation.lon)
     cT = geopy.Point(targetLocation.lat, targetLocation.lon)
@@ -608,20 +607,8 @@ class droneCommands(WebSocket):
             goto_position_target_global_int(targetLocation)
 
         elif cmd_id ==5:
-            camera.capture('/tmp/image1.jpg')
+            camera.capture('/tmp/image.jpg')
             shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')
-            #cam = cv2.VideoCapture(0)
-            #cam.set(3,1024)
-            #cam.set(4,768)
-            #cam.set(10,50)
-            #cam.set(11,50)
-            #cam.set(12,50)
-            #ramp_frames=30;
-            #for i in xrange(ramp_frames):
-            #    s, im = cam.read()
-            #s, im = cam.read() # captures image
-            #cv2.imwrite("/tmp/image.jpg",im) 
-            #print data[1]
             output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
             print output
             if output[0] == 0:
@@ -667,8 +654,28 @@ class droneCommands(WebSocket):
 
         elif cmd_id == 22:
             vector = float(data[1])
+            if vector > 30:
+                vector = 30
             gotoDistanceInHeading (vector , vehicle.heading) 
-            
+
+        elif cmd_id == 23: # go right
+            vector = float(data[1])
+            if vector > 30:
+                vector = 30
+            heading = vehicle.heading + 90
+            if heading >360:
+                heading = 360 - heading
+            gotoDistanceInHeading (vector , heading)  
+
+        elif cmd_id == 24: # go left
+            vector = float(data[1])
+            if vector > 30:
+                vector = 30
+            heading = vehicle.heading - 90
+            if heading < 0:
+                heading = 360 + heading
+            gotoDistanceInHeading (vector , heading)             
+
 
         if (isAck == False):
 	       self.sendMessage('ACK')
