@@ -154,8 +154,8 @@
         };
     };
 
-    // TakePicture
-    ext.takePicture = function(id,callback) {
+    // finf QR
+    ext.findQR = function(id,callback) {
         ws.send('5:' + id.toString() );
 
         ws.onmessage = function (evt)
@@ -175,9 +175,36 @@
                     callback('NOQR');
                 }
             }
+        };
+    };
 
+    // TakePicture
+    ext.takePicture = function(id,callback) {
+        ws.send('6');
 
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
 
+        };
+    };
+
+    // Set ISO
+    ext.setISO = function(ISO,callback) {
+        ws.send('30:' + ISO.toString());
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
 
         };
     };
@@ -190,10 +217,12 @@
             ['w', 'RTL', 'rtl'],
             ['w', 'LAND', 'land'],
             ['w', 'Set Heading %n', 'setheading',0],
-            ['R', 'Find QR ID %n', 'takePicture',1000],
             ['w', 'Forward %n meters', 'moveNmeters',1],
             ['w', 'Right %n meters', 'moveRmeters',1],
-            ['w', 'Left %n meters', 'moveLmeters',1]
+            ['w', 'Left %n meters', 'moveLmeters',1],
+            ['w', 'Set ISO %n', 'setISO',100],
+            ['R', 'Find QR ID %n', 'findQR',1000],
+            ['R', 'Take Picture', 'takePicture']
         ]
     };
 

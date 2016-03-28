@@ -454,6 +454,8 @@ def gotoDistanceInHeading(distanceMeters, heading):
 
     The method reports the distance to target every second.
     """
+    if distanceMeters > 30:
+        distanceMeters = 30.0
     currentLocation = vehicle.location.global_relative_frame
     newlat,newlon = getLocation_byDistanceAndBearing (currentLocation.lat,currentLocation.lon,distanceMeters/1000,heading)   
     targetLocation=LocationGlobalRelative(newlat, newlon,currentLocation.alt)
@@ -598,10 +600,10 @@ class droneCommands(WebSocket):
         	set_current_location_as_home()
 
         elif cmd_id ==3:
-
-        	alt = float(data[1])
-        	arm_and_takeoff(alt)
-
+            alt = float(data[1])
+            arm_and_takeoff(alt)
+            gotoDistanceInHeading (0.1 , vehicle.heading)
+            condition_yaw(vehicle.heading)
         elif cmd_id ==4:
             targetLocation = LocationGlobal(float(data[1]), float(data[2]),float(data[3]))
             goto_position_target_global_int(targetLocation)
@@ -625,7 +627,10 @@ class droneCommands(WebSocket):
             isAck = True
 
         elif cmd_id ==6:
-            print "Flying to qr"
+            print "Take Picture"
+            camera.capture('/tmp/image.jpg')
+            shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')
+
         
         elif cmd_id ==7:
             print "Setting altitude"
@@ -654,28 +659,30 @@ class droneCommands(WebSocket):
 
         elif cmd_id == 22:
             vector = float(data[1])
-            if vector > 30:
-                vector = 30
             gotoDistanceInHeading (vector , vehicle.heading) 
 
         elif cmd_id == 23: # go right
             vector = float(data[1])
-            if vector > 30:
-                vector = 30
             heading = vehicle.heading + 90
             if heading >360:
-                heading = 360 - heading
+                heading =  heading - 360
             gotoDistanceInHeading (vector , heading)  
 
         elif cmd_id == 24: # go left
             vector = float(data[1])
-            if vector > 30:
-                vector = 30
             heading = vehicle.heading - 90
             if heading < 0:
-                heading = 360 + heading
+                heading = 360 + heading   
             gotoDistanceInHeading (vector , heading)             
 
+        elif cmd_id == 30: # Change ISO
+            ISO = float(data[1])
+            if ISO < 0:
+                ISO = 0 
+            elif ISO > 1200:
+                ISO = 1200   
+            if CAMERA:
+                camera.ISO = ISO
 
         if (isAck == False):
 	       self.sendMessage('ACK')
