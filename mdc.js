@@ -62,7 +62,6 @@
 
     // RTL
     ext.rtl = function(callback) {
-        alert('RTL sent');
         ws.send('8');
         ws.onmessage = function (evt)
         {
@@ -108,10 +107,40 @@
         };
     };
 
+    //  Change Heading By
+    ext.changeHeading = function(heading,callback) {
+        console.log(heading);
+        ws.send('13:' + heading.toString());
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
 
     // Move N Meters
     ext.moveNmeters = function(meters,callback) {
         ws.send('22:' + meters.toString());
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            if (received_msg=='ACK') {
+                callback('ACK');
+            } else {
+                callback('FAIL');
+            }
+
+        };
+    };
+
+    // Move Back Meters
+    ext.moveBmeters = function(meters,callback) {
+        ws.send('21:' + meters.toString());
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;
@@ -216,7 +245,9 @@
             ['w', 'RTL', 'rtl'],
             ['w', 'LAND', 'land'],
             ['w', 'Set Heading %n', 'setheading',0],
+            ['w', 'Change Heading by %n Degrees', 'changeHeading',0],
             ['w', 'Forward %n meters', 'moveNmeters',1],
+            ['w', 'Back %n meters', 'moveBmeters',1],
             ['w', 'Right %n meters', 'moveRmeters',1],
             ['w', 'Left %n meters', 'moveLmeters',1],
             ['w', 'Set ISO %n', 'setISO',100],

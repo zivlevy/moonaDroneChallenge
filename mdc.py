@@ -609,21 +609,22 @@ class droneCommands(WebSocket):
             goto_position_target_global_int(targetLocation)
 
         elif cmd_id ==5:
-            camera.capture('/tmp/image.jpg')
-            shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')
-            output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
-            print output
-            if output[0] == 0:
-                self.frag_type = 0x1
-                print output[1]
-                if output[1] == "WRONGQR":
-                    self.sendMessage('WRONGQR')
-                elif output[1] == data[1]:
-                    self.sendMessage('FOUND')
-                else:
-                    self.sendMessage('NOQR')
+            isFound = False
+            for x in range(0, 4): #try 4 times
+                camera.capture('/tmp/image.jpg')
+                output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
+                if output[0] == 0:
+                    if output[1] == data[1]:
+                        isFound = True
+                        break
+            if isFound:
+                self.sendMessage('FOUND')
+            elif output[1] == "WRONGQR":
+                self.sendMessage('WRONGQR')
             else:
                 self.sendMessage('NOQR')
+
+            shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')
             isAck = True
 
         elif cmd_id ==6:
@@ -651,13 +652,23 @@ class droneCommands(WebSocket):
         elif cmd_id ==11:
             goto_position_target_offset_ned(float(data[1]), float(data[2]), -float(data[3]))
     
-        elif cmd_id == 12:
+        elif cmd_id == 12: #set heading
             condition_yaw(float(data[1]))
     
-        elif cmd_id == 13:
-            condition_yaw(float(data[1]),True)
+        elif cmd_id == 13: #change heading By
+            headingChange = float(data[1])
+            newHeading = vehicle.heading + headingChange
+            if newHeading >360:
+                newHeading =  newHeading - 360
+            elif newHeading <0:
+                newHeading = 360 + newHeading
+            condition_yaw(float(data[1]))
 
-        elif cmd_id == 22:
+        elif cmd_id == 21: #move back
+            vector = float(data[1])
+            gotoDistanceInHeading (-vector , vehicle.heading) 
+
+        elif cmd_id == 22: #move forward
             vector = float(data[1])
             gotoDistanceInHeading (vector , vehicle.heading) 
 

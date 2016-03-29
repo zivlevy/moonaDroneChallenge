@@ -2,7 +2,7 @@ import os,time
 import threading
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
-
+clients = []
 class droneCommands(WebSocket):
 
     def handleMessage(self):
@@ -10,11 +10,12 @@ class droneCommands(WebSocket):
         print "message"
         
     def handleConnected(self):
+        global clients
         print self.address, 'connected'
         self.sendMessage("connected")
-        self.file_monitor()
-        self.sendMessage("connected1")
-        self.sendMessage("connected2")
+        clients.append(self)
+        threading.Timer(1, self.file_monitor).start() 
+
         
         
 
@@ -23,7 +24,7 @@ class droneCommands(WebSocket):
     
     def file_monitor(self):
         global t,last
-        print self
+         
         path = os.path.dirname(os.path.abspath(__file__))
         
         filename = path + '/text.txt'
@@ -32,7 +33,9 @@ class droneCommands(WebSocket):
             if t > last:
                 last = t
                 print "change"
-                self.sendMessage("change")
+                clients[0].sendMessage("change")
+                clients[0].sendMessage("change1")
+                clients[0].sendMessage('/n')
 
                 print "change after"
         threading.Timer(1, self.file_monitor).start() 
