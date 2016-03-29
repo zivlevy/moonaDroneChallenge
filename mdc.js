@@ -181,7 +181,6 @@
     // TakePicture
     ext.takePicture = function(id,callback) {
         ws.send('6');
-
         ws.onmessage = function (evt)
         {
             var received_msg = evt.data;

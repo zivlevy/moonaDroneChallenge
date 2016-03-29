@@ -28,7 +28,7 @@ Connecting to Quadcopter
 
 vehicle = connect('127.0.0.1:1244', wait_ready=True)
 
-CAMERA = False
+CAMERA = True
 server_up = True
 TIMEOUT=10
 
@@ -676,13 +676,13 @@ class droneCommands(WebSocket):
             gotoDistanceInHeading (vector , heading)             
 
         elif cmd_id == 30: # Change ISO
-            ISO = float(data[1])
+            ISO = int(data[1])
+            print ISO
             if ISO < 0:
                 ISO = 0 
             elif ISO > 1200:
-                ISO = 1200   
-            if CAMERA:
-                camera.ISO = ISO
+                ISO = 1200  
+            camera.ISO = ISO
 
         if (isAck == False):
 	       self.sendMessage('ACK')

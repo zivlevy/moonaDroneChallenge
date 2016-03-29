@@ -1,0 +1,8 @@
+mavproxy on RP:
+mavproxy.py --master=/dev/ttyACM0 --baudrate 115200  --out 127.0.0.1:1244 --out 10.0.0.101:14550
+
+RP server:
+python mdc.py
+
+File to open on scratchX site:
+http://zivlevy.github.io/moonaDroneChallenge/mdc.js
