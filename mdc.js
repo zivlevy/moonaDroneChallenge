@@ -179,7 +179,7 @@
     };
 
     // TakePicture
-    ext.takePicture = function(id,callback) {
+    ext.takePicture = function(callback) {
         ws.send('6');
         ws.onmessage = function (evt)
         {
@@ -221,7 +221,7 @@
             ['w', 'Left %n meters', 'moveLmeters',1],
             ['w', 'Set ISO %n', 'setISO',100],
             ['R', 'Find QR ID %n', 'findQR',1000],
-            ['w', 'Take Picture', 'takePicture']
+            ['w', 'TakePicture', 'takePicture']
         ]
     };
 
