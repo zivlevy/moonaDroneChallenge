@@ -1,7 +1,7 @@
 import time
 import os.path
 import shutil
-
+import subprocess
 from droneapi.lib import VehicleMode, Location, Command
 from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
 
@@ -624,24 +624,29 @@ class droneCommands(WebSocket):
             pub_socket.send (str(msg))
             for x in range(0, 4): #try 4 times
                 camera.capture('/tmp/image.jpg')
-                output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
-                if output[0] == 0:
-                    if output[1] == data[1]:
-                        isFound = True
-                        break
+                cmd = ['/home/pi/aruco_test', '/tmp/image.jpg', data[1]]
+                output = subprocess.Popen(cmd,stdout=subprocess.PIPE)
+                output.wait()
+                result = output.communicate()[0]
+                # output = commands.getstatusoutput('~/aruco-1.3.0/build/utils/aruco_test /tmp/image.jpg ' + data[1])
+                # if output[0] == 0:
+                if result == data[1] + '\n':
+                    isFound = True
+                    break
 
             #shutil.copy2('/tmp/image.jpg', '/var/www/html/image.jpg')            
-            pub_socket.send("newpicture")
+
             if isFound:
                 self.sendMessage('FOUND')
                 pub_socket.send ('FOUND')
-            elif output[1] == "WRONGQR":
+            elif result == "WRONGQR" + "\n":
                 self.sendMessage('WRONGQR')
                 pub_socket.send ('WRONGQR')
             else:
                 self.sendMessage('NOQR')
                 pub_socket.send ('NOQR')
 
+            pub_socket.send("newpicture")
             
             isAck = True
             
@@ -692,13 +697,13 @@ class droneCommands(WebSocket):
 
         elif cmd_id == 21: #move back
             vector = float(data[1])
-            msg="back " + data[1] + " maters"
+            msg="back " + data[1] + " meters"
             pub_socket.send (str(msg))
             gotoDistanceInHeading (-vector , vehicle.heading) 
 
         elif cmd_id == 22: #move forward
             vector = float(data[1])
-            msg="forward " + data[1] + " maters"
+            msg="forward " + data[1] + " meters"
             pub_socket.send (str(msg))
             gotoDistanceInHeading (vector , vehicle.heading) 
 
@@ -707,7 +712,7 @@ class droneCommands(WebSocket):
             heading = vehicle.heading + 90
             if heading >360:
                 heading =  heading - 360
-            msg="right " + data[1] + " maters"
+            msg="right " + data[1] + " meters"
             pub_socket.send (str(msg))
             gotoDistanceInHeading (vector , heading)  
 
@@ -716,7 +721,7 @@ class droneCommands(WebSocket):
             heading = vehicle.heading - 90
             if heading < 0:
                 heading = 360 + heading 
-            msg="left " + data[1] + " maters"
+            msg="left " + data[1] + " meters"
             pub_socket.send (str(msg))  
             gotoDistanceInHeading (vector , heading)             
 

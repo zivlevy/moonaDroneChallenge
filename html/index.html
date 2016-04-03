@@ -37,17 +37,26 @@
    function onMessage(evt)
    {
        console.log (evt);
-       writeToScreen("response: " + evt.data + '\n');
        var received_msg = evt.data;
        var reader = new window.FileReader();
        reader.readAsBinaryString(received_msg);
        reader.onloadend = function() {
 
           console.log (reader.result);
-          var image = new Image();
-          image.src = 'data:image/png;base64,'+reader.result;
-          var elem = document.getElementById("dronePic");
-          elem.src = image.src;
+          result = JSON.parse(reader.result);
+          switch(result.type) {
+            case "picture":
+                var image = new Image();
+                image.src = 'data:image/png;base64,'+result.data;
+                var elem = document.getElementById("dronePic");
+                elem.src = image.src; 
+                writeToScreen("new picture" + '\n'); 
+                break;
+            case "message":
+                writeToScreen(result.data + '\n');
+
+}
+
        };
 
 //window.open('http://www.stackoverflow.com', '_blank', 'toolbar=yes, location=yes, status=yes, menubar=yes, scrollbars=yes');
@@ -86,7 +95,7 @@
         <br>
         <br>
         <br>
-        <img id="dronePic" src="image.jpg" width="800" height="600" alt="No Image">
+        <img id="dronePic" src="field2-1.png" width="800" height="600" alt="No Image">
     </center>
 
 </div>
@@ -95,14 +104,14 @@
 <center>
     <form name="myform">
         <p>
-            <textarea style="font-size: 20pt" name="outputtext" rows="12" cols="50"></textarea>
+            <textarea style="font-size: 20pt" name="outputtext" rows="12" cols="45"></textarea>
         </p>
 <!--         <p>
             <textarea name="url" cols="50"></textarea>
         </p> -->
         <p>
             <!-- <input type="button" name=sendButton value="Send" onClick="sendText();"> -->
-            <input type="button" name=clearButton value="Clear" onClick="clearText();" style="font-size: 25pt; width: 200pt ; height: 30pt">
+            <input type="button" name=clearButton value="Clear" onClick="clearText();" style="font-size: 20pt; width: 200pt ; height: 32pt">
             <!-- <input type="button" name=disconnectButton value="Disconnect" onClick="doDisconnect();"> -->
             <!-- <input type="button" name=connectButton value="Connect" onClick="doConnect();"> -->
         </p>
